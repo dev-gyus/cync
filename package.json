@@ -1,0 +1,41 @@
+{
+  "name": "claude-code-sync",
+  "version": "1.0.0",
+  "description": "Backup and sync your Claude Code settings to the cloud via Git",
+  "main": "dist/cli.js",
+  "bin": {
+    "claude-code-sync": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "claude-code",
+    "sync",
+    "backup",
+    "settings",
+    "dotfiles",
+    "claude"
+  ],
+  "author": "",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "commander": "^12.0.0",
+    "js-yaml": "^4.1.0",
+    "glob": "^11.0.0",
+    "chalk": "^5.3.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0",
+    "vitest": "^2.0.0",
+    "@types/node": "^22.0.0",
+    "@types/js-yaml": "^4.0.9"
+  }
+}

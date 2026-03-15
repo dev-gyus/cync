@@ -1,0 +1,7 @@
+node_modules/
+*.tsbuildinfo
+.vitest/
+coverage/
+
+# Keep dist/ for plugin distribution
+# dist/
