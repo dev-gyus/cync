@@ -1,4 +1,4 @@
-# claude-code-sync
+# cync
 
 Backup and sync your Claude Code settings to the cloud via Git.
 
@@ -6,7 +6,7 @@ Backup and sync your Claude Code settings to the cloud via Git.
 
 ## Overview
 
-`claude-code-sync` is a Claude Code plugin that versions your `~/.claude/` directory in a private Git repository. Push from one machine, pull on another — keeping your settings, skills, commands, and memory in sync across all your devices.
+`cync` is a Claude Code plugin that versions your `~/.claude/` directory in a private Git repository. Push from one machine, pull on another — keeping your settings, skills, commands, and memory in sync across all your devices.
 
 ## Features
 
@@ -28,14 +28,14 @@ Backup and sync your Claude Code settings to the cloud via Git.
 ### Via Claude Code marketplace
 
 ```bash
-claude plugin add claude-code-sync
+claude plugin add cync
 ```
 
 ### Local install (development / testing)
 
 ```bash
-git clone https://github.com/dev-gyus/claude-code-sync.git
-claude plugin add /path/to/claude-code-sync
+git clone https://github.com/dev-gyus/cync.git
+claude plugin add /path/to/cync
 ```
 
 ## Quick Start
@@ -233,8 +233,8 @@ The `full` module automatically excludes noise and temporary paths: `sessions/`,
 
 ```bash
 # Clone
-git clone https://github.com/dev-gyus/claude-code-sync.git
-cd claude-code-sync
+git clone https://github.com/dev-gyus/cync.git
+cd cync
 
 # Install dependencies
 npm install
@@ -252,7 +252,7 @@ npm run test:watch
 ## Project Structure
 
 ```
-claude-code-sync/
+cync/
 ├── .claude-plugin/
 │   ├── plugin.json        # Plugin manifest
 │   └── marketplace.json   # Marketplace metadata

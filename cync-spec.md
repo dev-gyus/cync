@@ -1,4 +1,4 @@
-# claude-code-sync - 설계 스펙 & 구현 가이드
+# cync - 설계 스펙 & 구현 가이드
 
 > Claude Code 설정을 클라우드(GitHub)에 백업/동기화하는 오픈소스 플러그인
 
@@ -6,7 +6,7 @@
 
 ## 이 문서의 용도
 
-이 문서는 `claude-code-sync` 플러그인을 구현하기 위한 완전한 설계 스펙이다.
+이 문서는 `cync` 플러그인을 구현하기 위한 완전한 설계 스펙이다.
 새로운 Claude Code 세션에서 이 문서를 참조하여 구현을 시작할 수 있다.
 
 ### 구현 시작 방법
@@ -25,7 +25,7 @@
 
 | 항목 | 내용 |
 |------|------|
-| **프로젝트명** | `claude-code-sync` |
+| **프로젝트명** | `cync` |
 | **형태** | Claude Code 플러그인 (오픈소스) |
 | **저장소** | GitHub Private Repo (기본, 향후 플러거블 백엔드) |
 | **동기화 방식** | Git CLI 기반 수동 push/pull (MVP) |
@@ -74,7 +74,7 @@ plugin-name/
 
 ```json
 {
-  "name": "claude-code-sync",
+  "name": "cync",
   "description": "Backup and sync your Claude Code settings to the cloud via Git",
   "version": "1.0.0",
   "author": {
@@ -121,7 +121,7 @@ allowed-tools: ["Bash(${CLAUDE_PLUGIN_ROOT}/scripts/script.sh:*)"]
 ## 3. 프로젝트 구조
 
 ```
-claude-code-sync/
+cync/
 ├── .claude-plugin/
 │   └── plugin.json              # 플러그인 메타데이터
 ├── commands/
@@ -643,7 +643,7 @@ node "${PLUGIN_ROOT}/dist/cli.js" push "$@"
 4. **변경사항 diff UI**: 변경사항을 보기 좋게 시각화
 5. **선택적 프로젝트 메모리 동기화**: 특정 프로젝트만 선택
 6. **프로필 시스템**: work/home 등 상황별 설정 프로필 전환
-7. **npm 패키지 배포**: `npx claude-code-sync` 로 독립 CLI 사용 가능
+7. **npm 패키지 배포**: `npx cync` 로 독립 CLI 사용 가능
 
 ---
 

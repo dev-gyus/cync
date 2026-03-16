@@ -1,5 +1,5 @@
 {
-  "name": "claude-code-sync",
+  "name": "cync",
   "metadata": {
     "description": "Backup and sync your Claude Code settings to the cloud via Git"
   },
@@ -8,7 +8,7 @@
   },
   "plugins": [
     {
-      "name": "claude-code-sync",
+      "name": "cync",
       "description": "Backup and sync your Claude Code settings to the cloud via Git",
       "version": "1.0.0",
       "author": {

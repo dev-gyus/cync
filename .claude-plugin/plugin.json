@@ -1,5 +1,5 @@
 {
-  "name": "claude-code-sync",
+  "name": "cync",
   "description": "Backup and sync your Claude Code settings to the cloud via Git",
   "version": "1.0.0",
   "author": {
@@ -7,6 +7,6 @@
   },
   "license": "MIT",
   "keywords": ["sync", "backup", "settings", "dotfiles", "claude"],
-  "repository": "https://github.com/dev-gyus/claude-code-sync",
-  "homepage": "https://github.com/dev-gyus/claude-code-sync#readme"
+  "repository": "https://github.com/dev-gyus/cync",
+  "homepage": "https://github.com/dev-gyus/cync#readme"
 }

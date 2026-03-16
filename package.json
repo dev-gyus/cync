@@ -1,10 +1,10 @@
 {
-  "name": "claude-code-sync",
+  "name": "cync",
   "version": "1.0.0",
   "description": "Backup and sync your Claude Code settings to the cloud via Git",
   "main": "dist/cli.js",
   "bin": {
-    "claude-code-sync": "dist/cli.js"
+    "cync": "dist/cli.js"
   },
   "scripts": {
     "build": "tsc",

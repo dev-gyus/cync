@@ -4,7 +4,7 @@ import { SyncEngine } from './sync-engine.js';
 import * as logger from './utils/logger.js';
 const program = new Command();
 program
-    .name('claude-code-sync')
+    .name('cync')
     .description('Backup and sync your Claude Code settings to the cloud via Git')
     .version('1.0.0');
 // -------------------------------------------------------------------------
