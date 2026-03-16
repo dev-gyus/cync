@@ -4,44 +4,55 @@ Backup and sync your Claude Code settings to the cloud via Git.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
+## Overview
+
+`claude-code-sync` is a Claude Code plugin that versions your `~/.claude/` directory in a private Git repository. Push from one machine, pull on another — keeping your settings, skills, commands, and memory in sync across all your devices.
+
 ## Features
 
-- **Git-based backup & restore** -- `~/.claude/` 설정을 Git 저장소에 버전 관리합니다. 한 기기에서 push하고 다른 기기에서 pull하세요.
-- **모듈별 동기화** -- core, skills, commands, memory, plugins, plans 중 원하는 것만 선택하여 동기화할 수 있습니다.
-- **민감 데이터 스캔** -- push 전에 API 키, 토큰, 시크릿을 자동 스캔합니다. 감지되면 마스킹된 미리보기와 함께 경고합니다.
-- **AES-256-GCM 암호화 (선택)** -- `CC_SYNC_KEY` 환경변수에 키를 설정하면 동기화 파일을 암호화합니다.
-- **Dry-run 모드** -- 실제 변경 없이 push/pull 결과를 미리 확인할 수 있습니다.
-- **충돌 해결** -- pull 시 로컬과 리모트가 다른 파일에 대해 파일별 덮어쓰기/유지를 선택할 수 있습니다.
+- **Git-based backup & restore** — Version-control your `~/.claude/` settings. Push from one device and pull on another.
+- **Module-based sync** — Choose only what you need: `core`, `skills`, `commands`, `memory`, `plugins`, `plans`, or a full backup.
+- **Sensitive data scanning** — Automatically scans files for API keys, tokens, and secrets before every push. Shows a masked preview with a warning if anything is detected.
+- **AES-256-GCM encryption (optional)** — Set `CC_SYNC_KEY` in your environment to encrypt synced files at rest.
+- **Dry-run mode** — Preview push/pull results without making any changes.
+- **Conflict resolution** — When pulling, decide file-by-file whether to overwrite with remote or keep local.
 
-## Quick Start
+## Prerequisites
 
-### 사전 요구사항
-
-- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) 설치
+- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) installed
 - Git
 - Node.js 18+
 
-### Claude Code 플러그인으로 설치
+## Installation
+
+### Via Claude Code marketplace
 
 ```bash
+claude plugin add claude-code-sync
+```
+
+### Local install (development / testing)
+
+```bash
+git clone https://github.com/dev-gyus/claude-code-sync.git
 claude plugin add /path/to/claude-code-sync
 ```
 
-### 초기화
+## Quick Start
 
-private 저장소를 먼저 만든 후 연결합니다:
+**1. Create a private repository** on GitHub (or any Git host), then initialize sync:
 
 ```
 /sync-init git@github.com:you/claude-settings.git
 ```
 
-### 설정 push
+**2. Push your settings:**
 
 ```
 /sync-push
 ```
 
-### 다른 기기에서 pull
+**3. Pull on another machine:**
 
 ```
 /sync-pull
@@ -51,11 +62,11 @@ private 저장소를 먼저 만든 후 연결합니다:
 
 | Command | Description |
 |---------|-------------|
-| `/sync-init <remote-url>` | Git 저장소에 연결하여 동기화 초기화 |
-| `/sync-push [options]` | 로컬 설정을 리모트에 push |
-| `/sync-pull [options]` | 리모트 설정을 로컬로 pull |
-| `/sync-status` | 동기화 상태 및 모듈별 변경사항 확인 |
-| `/sync-help` | 도움말 및 사용 예시 표시 |
+| `/sync-init <remote-url>` | Connect to a Git repository and initialize sync |
+| `/sync-push [options]` | Push local settings to remote |
+| `/sync-pull [options]` | Pull remote settings to local |
+| `/sync-status` | Show sync status and per-module change counts |
+| `/sync-help` | Display help and usage examples |
 
 ### `/sync-init <remote-url>`
 
@@ -64,66 +75,66 @@ private 저장소를 먼저 만든 후 연결합니다:
 /sync-init --module core,skills,commands,memory https://github.com/you/claude-settings.git
 ```
 
-`~/.claude/.cc-sync-repo/`에 sync 저장소를 클론(또는 초기화)하고 설정 파일을 생성합니다.
+Clones (or initializes) a sync repository at `~/.claude/.cc-sync-repo/` and creates a config file.
 
 ### `/sync-push [options]`
 
 | Option | Description |
 |--------|-------------|
-| `--module <names>` | push할 모듈 지정 (쉼표 구분, 기본: 활성화된 모든 모듈) |
-| `--message <msg>` | 커스텀 커밋 메시지 |
-| `--dry-run` | 실제 push 없이 변경사항 미리보기 |
-| `--force` | 강제 push |
+| `--module <names>` | Modules to push (comma-separated; default: all enabled) |
+| `--message <msg>` | Custom commit message |
+| `--dry-run` | Preview changes without pushing |
+| `--force` | Force push |
 
 ### `/sync-pull [options]`
 
 | Option | Description |
 |--------|-------------|
-| `--module <names>` | pull할 모듈 지정 (쉼표 구분) |
-| `--dry-run` | 실제 적용 없이 변경사항 미리보기 |
-| `--backup` | pull 전에 현재 설정의 타임스탬프 백업 생성 |
-| `--keep-local` | 충돌 발생 시 모든 로컬 파일 유지 |
+| `--module <names>` | Modules to pull (comma-separated) |
+| `--dry-run` | Preview changes without applying |
+| `--backup` | Create a timestamped backup of current settings before pulling |
+| `--keep-local` | Keep all local files on conflict |
 
-#### 충돌 해결
+#### Conflict resolution
 
-pull 시 로컬과 리모트 파일이 다를 경우 파일별로 처리 방법을 질문합니다:
+When local and remote files differ, each conflict is resolved interactively:
 
-| 상태 | 설명 | 처리 |
-|------|------|------|
-| `new` | 리모트에만 존재 | 자동 복사 |
-| `identical` | 양쪽 동일 | 스킵 |
-| `conflict` | 양쪽 다름 | 유저에게 질문 (덮어쓰기 / 로컬 유지) |
-| `local-only` | 로컬에만 존재 | 건드리지 않음 |
+| Status | Meaning | Action |
+|--------|---------|--------|
+| `new` | Remote-only file | Copied automatically |
+| `identical` | Both sides match | Skipped |
+| `conflict` | Both sides differ | You choose: overwrite or keep local |
+| `local-only` | Local-only file | Left untouched |
 
 ### `/sync-status`
 
-리모트 URL, 브랜치, 기기 ID, 마지막 동기화 시간, 모듈별 변경 파일 수를 표시합니다.
+Displays remote URL, branch, machine ID, last sync time, and per-module changed file counts.
 
 ## Configuration
 
-`~/.claude/.cc-sync.yml`에 설정이 저장됩니다. `/sync-init`으로 자동 생성되며, 직접 편집할 수도 있습니다.
+Settings are stored in `~/.claude/.cc-sync.yml`. Auto-created by `/sync-init`; you can also edit it directly.
 
 ```yaml
-# Git 리모트 URL
+# Git remote URL
 remote: "git@github.com:you/claude-settings.git"
 
-# 동기화 브랜치
+# Sync branch
 branch: "main"
 
-# 동기화할 모듈
+# Modules to sync
 modules:
-  core: true        # CLAUDE.md, 프레임워크 문서, settings.json
+  core: true        # CLAUDE.md, framework docs, settings.json
   skills: true      # ~/.claude/skills/
   commands: true    # ~/.claude/commands/
-  memory: false     # 프로젝트 메모리 파일
-  plugins: false    # 플러그인 설치 매니페스트
-  plans: false      # 플랜 파일
-  full: false       # 전체 백업 (제외 패턴 적용)
+  memory: false     # Per-project memory files
+  plugins: false    # Plugin install manifest
+  plans: false      # Plan files
+  full: false       # Full backup (exclusion patterns applied)
 
-# 민감 데이터 처리
+# Sensitive data handling
 sensitive:
-  encrypt: false    # AES-256-GCM 암호화 (CC_SYNC_KEY 필요)
-  exclude:          # 동기화에서 제외할 패턴
+  encrypt: false    # AES-256-GCM encryption (requires CC_SYNC_KEY)
+  exclude:          # Patterns excluded from sync
     - "*.jsonl"
     - "debug/"
     - "telemetry/"
@@ -140,7 +151,7 @@ sensitive:
     - "todos/"
     - "backups/"
 
-# 커밋 메시지에 포함할 기기 식별자
+# Machine identifier included in commit messages
 machine_id: ""
 ```
 
@@ -148,116 +159,116 @@ machine_id: ""
 
 | Module | What it syncs | Default |
 |--------|---------------|---------|
-| `core` | `CLAUDE.md`, 프레임워크 문서 (`COMMANDS.md`, `FLAGS.md` 등), `settings.json` | Enabled |
-| `skills` | `~/.claude/skills/` 디렉토리 (재귀) | Enabled |
-| `commands` | `~/.claude/commands/` 디렉토리 (재귀) | Enabled |
-| `memory` | `~/.claude/projects/*/memory/` 프로젝트별 메모리 파일 | Disabled |
-| `plugins` | 플러그인 설치 매니페스트 (`installed_plugins.json`) | Disabled |
-| `plans` | `~/.claude/plans/` 플랜 마크다운 파일 | Disabled |
-| `full` | `~/.claude/` 전체 (제외 패턴 적용: sessions, cache, telemetry 등) | Disabled |
+| `core` | `CLAUDE.md`, framework docs (`COMMANDS.md`, `FLAGS.md`, …), `settings.json` | Enabled |
+| `skills` | `~/.claude/skills/` (recursive) | Enabled |
+| `commands` | `~/.claude/commands/` (recursive) | Enabled |
+| `memory` | `~/.claude/projects/*/memory/` per-project memory files | Disabled |
+| `plugins` | Plugin install manifest (`installed_plugins.json`) | Disabled |
+| `plans` | `~/.claude/plans/` plan markdown files | Disabled |
+| `full` | All of `~/.claude/` with exclusion patterns applied | Disabled |
 
-### 모듈 설정 방법
+### Selecting modules
 
-**1. 초기화 시 지정:**
+**At init time:**
 ```
 /sync-init git@github.com:you/repo.git --module core,skills,commands,memory
 ```
 
-**2. push/pull 시 임시 오버라이드:**
+**Per-command override:**
 ```
 /sync-push --module core,skills
 /sync-pull --module core,skills,memory
 ```
 
-**3. 설정 파일 직접 편집:**
+**Editing the config file directly:**
 
-`~/.claude/.cc-sync.yml`의 `modules` 섹션을 수정합니다.
+Modify the `modules` section in `~/.claude/.cc-sync.yml`.
 
 ## Security
 
-### 민감 데이터 스캔
+### Sensitive data scanning
 
-`/sync-push` 실행 시 커밋 전에 파일을 스캔합니다:
+Before committing, `/sync-push` scans every file for:
 
-- API 키, 토큰, 비밀번호, 시크릿
-- PEM 형식 개인 키
-- 주요 서비스 키 (OpenAI `sk-*`, GitHub `ghp_*`, AWS 액세스 키 등)
+- API keys, tokens, passwords, secrets
+- PEM-format private keys
+- Service-specific patterns (OpenAI `sk-*`, GitHub `ghp_*`, AWS access keys, etc.)
 
-감지되면 마스킹된 미리보기와 함께 경고합니다. 파일은 여전히 push됩니다 -- 직접 확인할 수 있는 기회를 제공합니다.
+Detected secrets are shown with a masked preview as a warning. The file is still pushed — giving you the chance to review and decide.
 
-### 권장사항
+### Recommendations
 
-- **Private 저장소를 사용하세요.** Claude Code 설정에는 개인 지침, 프로젝트 컨텍스트, API 참조 등이 포함될 수 있습니다.
-- **암호화를 활성화하세요.** `.cc-sync.yml`에서 `sensitive.encrypt: true`로 설정하고 `CC_SYNC_KEY`를 export하세요:
+- **Use a private repository.** Claude Code settings can contain personal instructions, project context, and API references.
+- **Enable encryption.** Set `sensitive.encrypt: true` in `.cc-sync.yml` and export `CC_SYNC_KEY`:
 
 ```bash
-# 키 생성
+# Generate a key
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 
-# 쉘 프로필에 설정
+# Add to your shell profile
 export CC_SYNC_KEY="your-64-char-hex-key"
 ```
 
-### 기본 제외 패턴
+### Default exclusion patterns
 
-`full` 모듈은 불필요한/임시 경로를 자동 제외합니다: `sessions/`, `cache/`, `telemetry/`, `debug/`, `todos/`, `backups/`, `*.jsonl`, `*.lock`, `.cc-sync-repo/` 등.
+The `full` module automatically excludes noise and temporary paths: `sessions/`, `cache/`, `telemetry/`, `debug/`, `todos/`, `backups/`, `*.jsonl`, `*.lock`, `.cc-sync-repo/`, and more.
 
 ## Examples
 
 ```bash
-# 특정 모듈만 push (커스텀 메시지)
-/sync-push --module core,skills --message "프레임워크 업데이트"
+# Push specific modules with a custom message
+/sync-push --module core,skills --message "Update framework docs"
 
-# dry-run으로 변경사항 미리보기
+# Preview changes before pushing
 /sync-push --dry-run
 
-# 백업 후 core 모듈만 pull
+# Pull only core, creating a backup first
 /sync-pull --backup --module core
 
-# 충돌 시 로컬 파일 모두 유지
+# Keep all local files when conflicts arise
 /sync-pull --keep-local
 ```
 
 ## Development
 
 ```bash
-# 클론
+# Clone
 git clone https://github.com/dev-gyus/claude-code-sync.git
 cd claude-code-sync
 
-# 의존성 설치
+# Install dependencies
 npm install
 
-# 빌드
+# Build
 npm run build
 
-# 테스트
+# Run tests
 npm test
 
-# Watch 모드
+# Watch mode
 npm run test:watch
 ```
 
-### Project Structure
+## Project Structure
 
 ```
 claude-code-sync/
 ├── .claude-plugin/
-│   ├── plugin.json        # 플러그인 메타데이터
-│   └── marketplace.json   # 마켓플레이스 설정
-├── commands/              # 슬래시 커맨드 정의 (markdown)
+│   ├── plugin.json        # Plugin manifest
+│   └── marketplace.json   # Marketplace metadata
+├── commands/              # Slash command definitions (Markdown)
 │   ├── sync-init.md
 │   ├── sync-push.md
 │   ├── sync-pull.md
 │   ├── sync-status.md
 │   └── sync-help.md
-├── scripts/               # 커맨드 실행 쉘 스크립트
+├── scripts/               # Command execution shell scripts
 ├── src/
-│   ├── cli.ts             # CLI 엔트리 포인트 (Commander.js)
-│   ├── config.ts          # .cc-sync.yml 로더/저장
-│   ├── sync-engine.ts     # 핵심 동기화 로직 (init, push, pull, status)
-│   ├── modules/           # 동기화 모듈 구현
-│   │   ├── base-module.ts # SyncModule 인터페이스 및 파일 복사 헬퍼
+│   ├── cli.ts             # CLI entry point (Commander.js)
+│   ├── config.ts          # .cc-sync.yml loader/saver
+│   ├── sync-engine.ts     # Core sync logic (init, push, pull, status)
+│   ├── modules/           # Sync module implementations
+│   │   ├── base-module.ts # SyncModule interface and file-copy helpers
 │   │   ├── core-settings.ts
 │   │   ├── skills.ts
 │   │   ├── commands.ts
@@ -265,17 +276,17 @@ claude-code-sync/
 │   │   ├── plugins.ts
 │   │   ├── plans.ts
 │   │   ├── full-backup.ts
-│   │   └── index.ts       # 모듈 레지스트리
+│   │   └── index.ts       # Module registry
 │   └── utils/
-│       ├── git.ts              # Git 명령 래퍼
-│       ├── sensitive-scanner.ts # 시크릿 감지
-│       ├── crypto.ts           # AES-256-GCM 암호화/복호화
-│       ├── file-mapper.ts      # 파일 매핑 유틸리티
-│       └── logger.ts           # 콘솔 출력 헬퍼
+│       ├── git.ts              # Git command wrappers
+│       ├── sensitive-scanner.ts # Secret detection
+│       ├── crypto.ts           # AES-256-GCM encrypt/decrypt
+│       ├── file-mapper.ts      # File mapping utilities
+│       └── logger.ts           # Console output helpers
 ├── tests/
-│   ├── unit/              # 단위 테스트
-│   ├── integration/       # 통합 테스트
-│   └── fixtures/          # 테스트 픽스처
+│   ├── unit/              # Unit tests
+│   ├── integration/       # Integration tests
+│   └── fixtures/          # Test fixtures
 ├── package.json
 ├── tsconfig.json
 └── vitest.config.ts
@@ -283,11 +294,11 @@ claude-code-sync/
 
 ## Roadmap
 
-- [ ] Git hook 또는 파일 워처를 통한 자동 동기화
-- [ ] 양방향 충돌 해결 (three-way merge)
-- [ ] Git 외 스토리지 어댑터 (S3, Google Drive)
-- [ ] 모듈별 암호화 세분화
-- [ ] diff 미리보기 Web UI
+- [ ] Auto-sync daemon — a companion `sync-watch` command using `chokidar` to watch `~/.claude/` and push on change; installable as a launchd (macOS) or systemd (Linux) service
+- [ ] Three-way merge — use `git merge-file` or the `diff3` package to auto-merge non-conflicting lines in text files, falling back to interactive prompt only for true conflicts
+- [ ] Per-module encryption — configure `encrypt: true` per module rather than globally (the `crypto.ts` infrastructure already exists)
+- [ ] Diff viewer integration — show colored diffs before push/pull via `git diff`, or open files side-by-side in VS Code with `code --diff`
+- [ ] Multi-device branches — push/pull from a machine-specific branch (e.g. `sync/macbook-pro`) and merge into `main` when ready
 
 ## License
 

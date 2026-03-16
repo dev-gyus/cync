@@ -1,7 +1,9 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "claude-code-sync",
-  "description": "Backup and sync your Claude Code settings to the cloud via Git",
+  "metadata": {
+    "description": "Backup and sync your Claude Code settings to the cloud via Git"
+  },
   "owner": {
     "name": "devgyu"
   },
@@ -15,7 +17,7 @@
       },
       "source": "./",
       "category": "productivity",
-      "tags": ["sync", "backup", "settings"]
+      "tags": ["sync", "backup", "settings", "dotfiles"]
     }
   ]
 }

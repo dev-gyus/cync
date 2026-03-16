@@ -6,5 +6,7 @@
     "name": "devgyu"
   },
   "license": "MIT",
-  "keywords": ["sync", "backup", "settings", "dotfiles", "claude"]
+  "keywords": ["sync", "backup", "settings", "dotfiles", "claude"],
+  "repository": "https://github.com/dev-gyus/claude-code-sync",
+  "homepage": "https://github.com/dev-gyus/claude-code-sync#readme"
 }
