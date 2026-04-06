@@ -12,5 +12,5 @@ Initialize Claude Code settings sync by connecting to a Git remote repository.
 Provide the Git remote URL (SSH or HTTPS) of the repository to use for settings backup.
 
 ```!
-"${CLAUDE_PLUGIN_ROOT}/scripts/sync-init.sh" $ARGUMENTS
+${CLAUDE_PLUGIN_ROOT}/scripts/sync-init.sh $ARGUMENTS
 ```

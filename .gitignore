@@ -5,3 +5,6 @@ coverage/
 
 # Keep dist/ for plugin distribution
 # dist/
+
+# Local Claude Code settings
+.claude/settings.local.json

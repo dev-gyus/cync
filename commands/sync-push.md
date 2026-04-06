@@ -15,5 +15,5 @@ Backup your Claude Code settings to the remote Git repository.
 - `--force`: Force push (overwrites remote)
 
 ```!
-"${CLAUDE_PLUGIN_ROOT}/scripts/sync-push.sh" $ARGUMENTS
+${CLAUDE_PLUGIN_ROOT}/scripts/sync-push.sh $ARGUMENTS
 ```

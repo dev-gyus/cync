@@ -25,17 +25,30 @@ Backup and sync your Claude Code settings to the cloud via Git.
 
 ## Installation
 
-### Via Claude Code marketplace
+### Quick install (one-liner)
+
+프로젝트 루트에서 실행:
 
 ```bash
-claude plugin add cync
+claude plugin marketplace add . && claude plugin install cync
 ```
 
-### Local install (development / testing)
+### Step-by-step
+
+```bash
+# 1. 로컬 마켓플레이스 등록
+claude plugin marketplace add .
+
+# 2. 플러그인 설치
+claude plugin install cync
+```
+
+### 다른 머신에서 설치 (git clone)
 
 ```bash
 git clone https://github.com/dev-gyus/cync.git
-claude plugin add /path/to/cync
+cd cync
+claude plugin marketplace add . && claude plugin install cync
 ```
 
 ## Quick Start
