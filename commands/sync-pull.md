@@ -23,7 +23,7 @@ You MUST follow this exact flow:
 Run the pull script with `--check-conflicts` flag. Pass through any `--module` flags from `$ARGUMENTS`.
 
 ```
-"${CLAUDE_PLUGIN_ROOT}/scripts/sync-pull.sh" --check-conflicts [--module flags if provided]
+${CLAUDE_PLUGIN_ROOT}/scripts/sync-pull.sh --check-conflicts [--module flags if provided]
 ```
 
 Parse the JSON output. The output is an array of `{ moduleName, conflicts }` where each conflict has:
@@ -74,12 +74,12 @@ Build the final pull command based on user choices:
 - Files the user chose to **keep local** (or `--keep-local` flag): include in `--skip-files`
 
 ```
-"${CLAUDE_PLUGIN_ROOT}/scripts/sync-pull.sh" [--module flags] [--backup flag] --skip-files <comma-separated> --overwrite-files <comma-separated>
+${CLAUDE_PLUGIN_ROOT}/scripts/sync-pull.sh [--module flags] [--backup flag] --skip-files <comma-separated> --overwrite-files <comma-separated>
 ```
 
 If no conflicts existed or user chose to overwrite all, just run:
 ```
-"${CLAUDE_PLUGIN_ROOT}/scripts/sync-pull.sh" [original $ARGUMENTS without --keep-local and --check-conflicts]
+${CLAUDE_PLUGIN_ROOT}/scripts/sync-pull.sh [original $ARGUMENTS without --keep-local and --check-conflicts]
 ```
 
 ### Step 5: Report results
