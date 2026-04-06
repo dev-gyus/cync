@@ -174,7 +174,7 @@ export class SyncEngine {
     if (existsSync(syncRepoDir)) {
       logger.info('Sync repo already exists, pulling latest changes...');
       try {
-        gitPull(syncRepoDir);
+        gitPull(syncRepoDir, getDefaultConfig().branch);
       } catch {
         logger.warn('Could not pull (remote may not exist yet). Continuing.');
       }
@@ -335,7 +335,7 @@ export class SyncEngine {
     logger.success('Changes committed.');
 
     try {
-      gitPush(syncRepoDir, options?.force);
+      gitPush(syncRepoDir, options?.force, config.branch);
       logger.success('Pushed to remote.');
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
@@ -359,7 +359,7 @@ export class SyncEngine {
     // 1. Git pull
     logger.info('Pulling latest changes from remote...');
     try {
-      gitPull(syncRepoDir);
+      gitPull(syncRepoDir, config.branch);
       logger.success('Pull complete.');
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
@@ -484,7 +484,7 @@ export class SyncEngine {
     // Git pull first to get latest
     logger.info('Pulling latest changes from remote...');
     try {
-      gitPull(syncRepoDir);
+      gitPull(syncRepoDir, config.branch);
       logger.success('Pull complete.');
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);

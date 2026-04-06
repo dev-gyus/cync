@@ -20,13 +20,15 @@ export declare function gitInit(dir: string): void;
  */
 export declare function gitAddRemote(dir: string, name: string, url: string): void;
 /**
- * Pull from the default remote and branch.
+ * Pull from the remote. When a branch is specified the command explicitly
+ * targets that branch so the local tracking configuration is ignored.
  */
-export declare function gitPull(dir: string): void;
+export declare function gitPull(dir: string, branch?: string): void;
 /**
- * Push to the default remote. Optionally force-push.
+ * Push to the remote. When a branch is specified, uses HEAD:<branch> syntax
+ * so it works regardless of the local branch name. Optionally force-push.
  */
-export declare function gitPush(dir: string, force?: boolean): void;
+export declare function gitPush(dir: string, force?: boolean, branch?: string): void;
 /**
  * Stage files for commit. Defaults to staging all changes.
  */

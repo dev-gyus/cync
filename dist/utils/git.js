@@ -80,19 +80,23 @@ export function gitAddRemote(dir, name, url) {
     exec(`git remote add "${name}" "${url}"`, dir);
 }
 /**
- * Pull from the default remote and branch.
+ * Pull from the remote. When a branch is specified the command explicitly
+ * targets that branch so the local tracking configuration is ignored.
  */
-export function gitPull(dir) {
+export function gitPull(dir, branch) {
     requireGit();
-    exec('git pull', dir);
+    const branchArg = branch ? ` origin ${branch}` : '';
+    exec(`git pull${branchArg}`, dir);
 }
 /**
- * Push to the default remote. Optionally force-push.
+ * Push to the remote. When a branch is specified, uses HEAD:<branch> syntax
+ * so it works regardless of the local branch name. Optionally force-push.
  */
-export function gitPush(dir, force = false) {
+export function gitPush(dir, force = false, branch) {
     requireGit();
     const forceFlag = force ? ' --force' : '';
-    exec(`git push${forceFlag}`, dir);
+    const branchArg = branch ? ` origin HEAD:${branch}` : '';
+    exec(`git push${forceFlag}${branchArg}`, dir);
 }
 /**
  * Stage files for commit. Defaults to staging all changes.
